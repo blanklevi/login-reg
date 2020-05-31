@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wall</title>
+  </head>
+  <body>
+    <h1>CodingDojo Wall</h1>
+    <h2>Welcome, {{ first_name }}</h2>
+    <a href="/logout">Log Off</a>
+    <hr />
+    <br />
+    <form action="/post_message" method="POST">
+      {% csrf_token %}
+      <label for="message">Post a Message</label><br />
+      <textarea name="message" cols="50" rows="5"></textarea><br />
+      <input type="hidden" name="user_id" value="{{user_id}}" />
+      <!-- this sends the user_id to the new function -->
+      <button>Post a Message</button>
+    </form>
+    {% for message in messages reversed %}
+    <h4>
+      {{message.user.first_name}} {{message.user.last_name}} - {{time}}
+    </h4>
+    <br />
+    <p>{{message.message}}</p>
+    {% for comment in message.comments.all %}
+    <h5>
+      {{comment.user.first_name}} {{comment.user.last_name}} -
+      {{comment.comment}} - {{time}}
+    </h5>
+    {% endfor %}
+    <form action="/post_comment" method="POST">
+      {% csrf_token %}
+      <label for="comment">Post a Comment</label> <br />
+      <textarea name="comment" cols="40" rows="3"></textarea> <br />
+      <input type="hidden" name="message_id" value="{{message.id}}" />
+      <input type="hidden" name="userid" value="{{session_id}}" />
+      <button>Post a Comment</button>
+    </form>
+    {% endfor %}
+  </body>
+</html>
